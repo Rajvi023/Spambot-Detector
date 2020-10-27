@@ -1,0 +1,571 @@
+<html>
+
+	<head>
+		<link rel="stylesheet" type="text/css" href="css/styles.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+			<script src="https://rawgit.com/jasondavies/d3-cloud/master/build/d3.layout.cloud.js"></script>
+	</head>
+
+	<body>
+		<div id="gridContainer">
+			<div id="grid-col1">
+				<div id="grid-col1-row1">
+					<div id="tLViewContainer" class="viewContainer">
+						<div id="timeLineViewYAxis"></div>
+						<div id="tLV-boxPlotContainer"></div>
+					</div>
+				</div>
+				<div id="grid-col1-row1row2-gutter" class="gutter gutter-horizontal"></div>
+				<div id="grid-col1-row2">
+					<div id="grid-col1-row2-col1">
+						<div id="dRViewContainer" class="viewContainer">
+							<svg id="dRViewScatterPlot" class="svg-scatter-plot"></svg>
+						</div>
+					</div>
+					<div id="grid-col1-row2-col1col2-gutter" class="gutter gutter-vertical"></div>
+					<div id="grid-col1-row2-col2">
+						<div id="viewC" class="viewContainer">
+							<div class="ActivitynavigationBar">
+								<button class="ActivityTabLinks active" id="activity_account_button">Accounts</button>
+								<button class="ActivityTabLinks" id="activity_tweet_button">Tweets</button>
+								<button class="ActivityTabLinks" id="activity_wordcloud_button">WordCloud</button>
+							</div>
+
+							<div id="spinnerAndViewContainer_users" class="spinnerAndViewContainer">
+								<div id="Accounts_activity_view_users" class="Activitytabcontent" style="display: block;">
+								</div>
+
+								<div id="Accounts_activity_view_tweets" class="Activitytabcontent" style="display: hidden;">
+								</div>
+
+								<div id="Accounts_activity_view_wordCloud" class="Activitytabcontent" style="display: hidden;">
+								</div>
+
+							</div>
+						</div>
+					</div>
+					<div id="grid-col1-row2-col2col3-gutter" class="gutter gutter-vertical"></div>
+					<div id="grid-col1-row2-col3">
+						<div id="topicClusteringView" class="viewContainer">
+							<div id="tCView-wordCloudContainer"></div>
+							<div id="tCView-scatterPlotContainer">
+								<svg id="tCView-ScatterPlot" class="svg-scatter-plot"></svg>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="grid-col1-row2row3-gutter" class="gutter gutter-horizontal"></div>
+				<div id="grid-col1-row3">
+					<div id="grid-col1-row3-col1">
+						<div id="violin-plot-1" class="viewContainer"><!--Violin Plot--></div>
+					</div>					
+					<div id="grid-col1-row3-col2">
+						<div id="violin-plot-2" class="viewContainer"><!--Violin Plot--></div>
+					</div>
+					<div id="grid-col1-row3-col3">
+						<div id="violin-plot-3" class="viewContainer"><!--Violin Plot--></div>
+					</div>					
+				</div>
+			</div>
+			<div id="grid-col1col2-gutter" class="gutter gutter-vertical"></div>
+			<div id="grid-col2">
+				<div id="General_control_panel" class="Control_Panel">
+					<div class="controls">
+						<h1 class="Control_Panel_Title">
+							<span class="Control_Panel_Title_background">General control panel</span>
+						</h1>
+					  	<div class="row_in_Control_panels" style="margin-bottom: 10px">
+					  		
+							&nbsp;<div class="color-box" style="background-color: #984ea3; width:25%;"></div>
+							<label style="width:25%; text-align: center;">Spambot&nbsp;</label>
+							<div class="color-box" style="background-color: #4daf4a; width:25%;"></div>
+							<label style="width:25%; text-align: center;">Genuine&nbsp;</label>
+						</div>
+						<div class="row_in_Control_panels" style="margin-bottom: 10px">
+							&nbsp;<div class="color-box" style="background-color: #377eb8; width:25%;"></div>
+							<label style="width:25%; text-align: center;">Unlabeled&nbsp;</label>
+							<div class="color-box" style="background-color: #e41a1c; width:25%;"></div>
+							<label style="width:25%; text-align: center;">Selected&nbsp;</label>
+					  	</div>
+					  	<!-- <div class="row_in_Control_panels" style="margin:10px">
+							<button id="Reset_Layout_Button" style="width: 100%">Reset Layout</button>
+						</div> -->
+						<div class="row_in_Control_panels" style="margin:10px">
+							<div id="selectionPanelContainer">
+							  	<label>&nbsp;Account Selector tools:</label>
+							  	<div class="row_in_Control_panels" style="margin-bottom: 5px">
+							  		<label title="what to do when a new selection initiated">&nbsp;Selection rule: <br></label>
+								  	<input type="radio" name="selection_option" value="add" id="add_radio_button" checked>
+								  		<label for="SelectionRule_Add">Add&nbsp;</label>
+									<input type="radio" name="selection_option" value="delete" id="delete_radio_button">
+										<label for="SelectionRule_Subtract">Subtract&nbsp;</label>
+								</div>
+								<div class="row_in_Control_panels" style="margin-bottom: 10px;">
+									<button id="AddAllButton" class="Label_Button" value="0" style="margin-right:5px; width:100%;">Add All</button>
+									<button id="SubtractAllButton" class="Label_Button" value="1" style="margin-left:5px; margin-right:5px; width:100%;">Subtract All</button>
+								</div>
+								<div class="row_in_Control_panels" style="margin-bottom: 10px;">
+									<button id="AddGenuineButton" class="Label_Button" value="0" style="margin-right:6px; width:100%;">Add All Genuine</button>
+									<button id="AddSpamButton" class="Label_Button" value="1" style="margin-left:5px; width:100%;">Add All Spambot</button>
+								</div>
+							</div>
+						</div>
+						<div class="row_in_Control_panels" style="margin:10px">
+							<div id="controlSubPanelSelectionContainer">
+								<label>&nbsp;Expand Control Panel For:</label>
+								<div class="row_in_Control_panels" style="margin-bottom: 0px">
+									<input type="radio" name="subPanelSelection" value="timeline" id="timeline_cp_radio_button" checked>
+								  		<label for="subPanelSelection_timeline">Timeline View&nbsp;</label>
+								</div>
+								<div class="row_in_Control_panels" style="margin-bottom: 0px">
+								  	<input type="radio" name="subPanelSelection" value="dr" id="dr_cp_radio_button">
+								  		<label for="subPanelSelection_dr">Dimensionality Reduction View&nbsp;</label>
+								</div>
+								<div class="row_in_Control_panels" style="margin-bottom: 0px">
+								  	<input type="radio" name="subPanelSelection" value="activity" id="activity_cp_radio_button">
+								  		<label for="subPanelSelection_activity">Details View&nbsp;</label>
+								</div>
+								<div class="row_in_Control_panels" style="margin-bottom: 0px">
+								  	<input type="radio" name="subPanelSelection" value="topic" id="topic_cp_radio_button">
+								  		<label for="subPanelSelection_topic">Topic Clustering View&nbsp;</label>
+								</div>
+								<div class="row_in_Control_panels" style="margin-bottom: 0px">
+								  	<input type="radio" name="subPanelSelection" value="fe" id="fe_cp_radio_button">
+								  		<label for="subPanelSelection_fe">Feature Explorer View&nbsp;</label>
+								</div>
+							</div>
+						</div>
+
+						<div class="row_in_Control_panels" style="margin:10px">
+							<div id="controlSubPanelSelectionContainer">
+								<label>&nbsp;Select Dataset:</label>
+								<div class="row_in_Control_panels" style="margin-bottom: 0px">
+									<input type="radio" name="datasetSelection" value="1" id="dataset_1_radio_btn" checked>
+								  		<label for="dataset_label_1">Dataset 1&nbsp;</label>
+								  	<input type="radio" name="datasetSelection" value="2" id="dataset_2_radio_btn">
+								  		<label for="dataset_label_2">Dataset 2&nbsp;</label>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<hr>
+				<div id="Labeling_panel" class="Control_Panel">
+					<div class="controls">
+						<h1 class="Control_Panel_Title">
+							<span class="Control_Panel_Title_background">Labeling panel</span>
+						</h1>
+
+						<div class="row_in_Control_panels">
+							<!-- TODO: Make functions for these -->
+							<button id="labelAsSpambotBtn" class="Label_Button" value="-1" style="margin-right:5px;">Label as Spambot</button>
+							<button id="labelAsGenuineBtn" class="Label_Button" value="1" style="margin-left:5px;">Label as Genuine</button>&nbsp;
+					  	</div>
+					  	<br>
+					</div>
+				</div>
+				<hr>
+				<div id="Timeline_view_controls" class="Control_Panel" style="display: block;">
+					<div class="controls">
+						<h1 class="Control_Panel_Title">
+							<span class="Control_Panel_Title_background">Timeline controls</span>
+						</h1>
+
+						<div class="row_in_Control_panels">
+							<label style="padding-top: 40px">Y-axis: </label>
+							<!-- TODO: onchange event -->
+							<select id="Timeline_Y_axis_Op" style="margin-bottom: 10px; overflow:auto" size="4">
+								<option value="SUM" selected="">Total</option>
+								<!--
+								<option value="AVG" disabled="">Average</option>
+								<option value="MIN" disabled="">Minimum</option>
+								<option value="MAX" disabled="">Maximum</option>
+								-->
+							</select>
+						
+						  	<!-- TODO: onchange event -->
+							<select id="Timeline_Y_axis_Select" style="margin-bottom: 10px; overflow:auto" multiple="">
+								<option value="tweets" selected=""># of tweets</option>
+								<option value="retweet"># of retweets</option>
+								<option value="hashtag"># of hashtags in tweets</option>
+								<option value="favorite"># of favorites</option>
+								<!--
+								<option value="4"># of links in tweets</option>
+								<option value="5"># of mentions in tweets</option>
+								<option value="6" disabled="">Sentiment polarity</option>
+								<option value="7" disabled="">Sentiment subjectivity</option>
+								<option value="8">tweet length</option>
+								<option value="9">retweeted tweets</option>
+								<option value="10">replies on tweets</option>
+								<option value="11">liked tweets</option>
+								<option value="12">Joining date</option>
+								-->
+						  	</select>
+							</div>
+							<!--<div class="row_in_Control_panels" style="margin-bottom: 10px;">
+							<label for="Timeline_X_axis_Aggregate" style="padding-top: 40px">&nbsp;X-axis: </label>
+							<select id="Timeline_X_axis_Aggregate" style="margin-bottom: 10px; overflow:auto" size="3">
+								<option value="Day" disabled="">DAY</option>
+								<option value="Month">MONTH</option>
+								<option value="Year" selected="">YEAR</option>
+						  	</select>
+					  	</div>
+						-->					  	
+					</div>
+				</div>
+
+
+				<!--
+				TimeLine Radio buttons:<br>
+					<input type="radio" name="timeLine_selection_option" value="tweets" id="timeLine_tweets_radio_button" checked> No of tweets
+					<input type="radio" name="timeLine_selection_option" value="retweet" id="timeLine_retweet_radio_button"> No of retweets
+					<input type="radio" name="timeLine_selection_option" value="hashtag" id="timeLine_reply_radio_button"> No of Hashtags
+					<input type="radio" name="timeLine_selection_option" value="favorite" id="timeLine_favorite_radio_button"> Favourite count
+				-->
+				<div id="Dimensionality_reduction_view_controls" class="Control_Panel" style="display: none;">
+					<div class="controls">
+						<h1 class="Control_Panel_Title">
+							<span class="Control_Panel_Title_background">Dimensionality reduction controls</span>
+						</h1>
+
+					  	<div class="row_in_Control_panels" style="margin-bottom: 10px">
+					  		<label>&nbsp;Technique:</label>
+					  		<!-- TODO: onclick/onchange -->
+                            <input id="DRTechnique_Selector_LLE" type="radio" name="DRTechnique_Selector" value="lle" checked="">
+						  		<label for="DRTechnique_Selector_LLE" title="">LLE</label>
+						  	<input id="DRTechnique_Selector_PCA" type="radio" name="DRTechnique_Selector" value="pca">
+						  		<label for="DRTechnique_Selector_PCA" title="Princeple Component Analysis">PCA</label>
+						  	<input id="DRTechnique_Selector_TSNE" type="radio" name="DRTechnique_Selector" value="tsne">
+						  		<label for="DRTechnique_Selector_TSNE" title="">t-SNE</label>
+						</div>
+						<label>&nbsp;Pre-reduction Transformation:</label>
+						<div class="row_in_Control_panels" style="margin-bottom: 10px">
+							<!-- TODO: onclick/onchange -->				  		
+						  	<input id="DimensionTransformation_Raw" type="radio" name="DimensionTransformation" value="none" checked="">
+						  		<label for="DimensionTransformation_Raw" title="reduce the dimensionality of raw features">none</label>
+						  	<input id="DimensionTransformation_min_max" type="radio" name="DimensionTransformation" value="minmax">
+						  		<label for="DimensionTransformation_min_max" title="reduce the dimensionality of normalized features">min-max</label>
+					  		<input id="DimensionTransformation_Standardized" type="radio" name="DimensionTransformation" value="standardize">
+						  		<label for="DimensionTransformation_Standardized" title="reduce the dimensionality of standardized features">Standardized</label>
+						</div>
+
+					  	<label>&nbsp;LLE Controls:</label>
+					  	<div id="LLE_Controls row_in_Control_panels" style="display:block">
+							<div class="row_in_Control_panels" style="overflow: hidden">
+								<div class="divTable" style="width: 30%">
+							  		<div class="tableRow">
+							  			<div class="tableCellNoBorder11">
+							  				<label for="n_neighbors">&nbsp;# of neighbors&nbsp;</label>
+							  			</div>
+							  			<div class="tableCellNoBorder22">
+							  				<input id="n_neighbors_input" type="number" step="1" value="3" style="width: 120px">
+							  			</div>
+							  		</div>
+							  	</div>
+						  	</div>
+					  	</div>
+
+                        <br>
+						<label>&nbsp;PCA Controls:</label>
+						<div id="PCA_Controls row_in_Control_panels" style="margin-bottom: 10px; display:block; overflow: hidden;">
+							<div class="row_in_Control_panels">
+								<label for="KernalTypesSelector" style="padding-top: 35px">&nbsp;Kernel&nbsp;</label>
+								<!-- TODO: Onchange -->
+								<select id="KernalTypesSelector" size="5" style="width: 50%">
+									<option value="linear" selected="">linear
+									</option><option value="poly">poly
+									</option><option value="rbf">rbf
+									</option><option value="sigmoid">sigmoid
+									</option><option value="cosine">cosine
+							  	</option></select>
+							  	&nbsp;
+							  	<div class="divTable" style="width: 50%">
+							  		<div class="tableRow">
+							  			<div class="tableCellNoBorder11">
+							  				<label for="Gamma_input">Gamma&nbsp;</label>
+							  			</div>
+							  			<div class="tableCellNoBorder22">
+							  				<input id="Gamma_input" type="number" step="0.01" value="0.05" style="width: 120px">&nbsp;
+							  			</div>
+							  		</div>
+							  		<div class="tableRow">
+							  			<div class="tableCellNoBorder11">
+							  				<label for="Degree_input">Degree&nbsp;</label>
+							  			</div>
+							  			<div class="tableCellNoBorder22">
+							  				<input id="Degree_input" type="number" step="1" value="3" style="width: 120px">&nbsp;
+							  			</div>
+							  		</div>
+							  		<div class="tableRow">
+							  			<div class="tableCellNoBorder11">
+							  				<label for="coef0_input">coef0&nbsp;</label>
+							  			</div>
+							  			<div class="tableCellNoBorder22">
+							  				<input id="coef0_input" type="number" step="0.1" value="1" style="width: 120px">&nbsp;
+							  			</div>
+							  		</div>
+							  	</div>
+						  	</div>						  	
+					  	</div>
+
+					  	<br>
+					  	<label>&nbsp;TSNE Controls:</label>
+					  	<div id="TSNE_Controls row_in_Control_panels" style="display:block">
+							<div class="row_in_Control_panels" style="overflow: hidden">
+								<div class="divTable" style="width: 30%">
+							  		<div class="tableRow">
+							  			<div class="tableCellNoBorder11">
+							  				<label for="perplexity_input">&nbsp;perplexity&nbsp;</label>
+							  			</div>
+							  			<div class="tableCellNoBorder22">
+							  				<input id="perplexity_input" type="number" step="0.1" value="30" style="width: 120px">
+							  			</div>
+							  		</div>
+							  		<div class="tableRow">
+							  			<div class="tableCellNoBorder11">
+							  				<label for="early_exaggeration_input">&nbsp;early_exaggeration&nbsp;</label>
+							  			</div>
+							  			<div class="tableCellNoBorder22">
+							  				<input id="early_exaggeration_input" type="number" step="0.1" value="12" style="width: 120px">
+							  			</div>
+							  		</div>
+							  		<div class="tableRow">
+							  			<div class="tableCellNoBorder11">
+							  				<label for="learning_rate_input">&nbsp;learning_rate&nbsp;</label>
+							  			</div>
+							  			<div class="tableCellNoBorder22">
+							  				<input id="learning_rate_input" type="number" step="0.1" value="200" style="width: 120px">
+							  			</div>
+							  		</div>
+							  	</div>
+						  	</div>						  	
+					  	</div>
+
+					  	<div class="row_in_Control_panels" style="margin:10px">
+							<button class="run_button" id="ComputeDRFields" style="width: 100%">Run</button>
+						</div>
+					</div>
+				</div>
+
+				<div id="Accounts_activity_view_controls" class="Control_Panel" style="display: none;">
+					<div class="controls">
+						<h1 class="Control_Panel_Title"><span class="Control_Panel_Title_background">Accounts activity controls</span></h1>
+						<div class="row_in_Control_panels" style="margin-left:10px; margin-right:10px;">
+							<label>Tweet Search:</label>
+						</div>
+						<div class="row_in_Control_panels" style="margin-left:10px; margin-right:10px;">
+							<input type="text" id="tweetSearchInput" style="width:100%">
+						</div>
+						<div class="row_in_Control_panels" style="margin-left:10px; margin-bottom:10px; margin-right:10px; margin-top:5px">
+							<button class="run_button" id="tweetFilterBtn" style="width: 50%; margin-right:5px;">Filter</button>
+							<button class="run_button" id="tweetResetBtn" style="width: 50%; margin-left:5px;">Reset</button>
+						</div>
+						<div class="row_in_Control_panels" style="margin-bottom:0px; margin-top:5px">
+							<label>&nbsp;Sort Tweets Based On:</label>
+						</div>
+						<div class="row_in_Control_panels" style="margin-bottom: 0px">
+							 <input type="radio" name="tweetSortType" id="tweetsortdescending" value="decending" checked="">
+							 <label for="tweetSortLabel">&nbsp;Descending Order</label>
+							 <input type="radio" name="tweetSortType" id="tweetsortascending" value="ascending">
+							 <label for="tweetSortLabel">&nbsp;Ascensing Order</label>
+						</div>
+						<div class="row_in_Control_panels" style="margin-bottom:10px; margin-top:5px">
+							<div class="row_in_Control_panels" style="margin-bottom: 10px">
+								 <input type="radio" name="tweetSortRadio" id="tweetsortdate" value="date" checked="">
+								 <label for="tweetSortLabel">&nbsp;Creation Date</label>
+								 <input type="radio" name="tweetSortRadio" id="tweetsortretweet" value="retweet">
+								 <label for="tweetSortLabel">&nbsp;Retweet Count</label>
+								 <input type="radio" name="tweetSortRadio" id="tweetsortfavorite" value="favorite">
+								 <label for="tweetSortLabel">&nbsp;Favorite Count</label>
+						  	</div>
+						</div>
+						<label>&nbsp;Word cloud controls:</label>
+						<div class="row_in_Control_panels" style="margin-bottom: 10px; overflow: hidden">
+							<div id="tweetsWordCloudControls">
+								<div class="vega-bind">
+									<span class="vega-bind-name">&nbsp;Word Padding (0-2)</span>
+									<input id="wcWordPadding" type="range" name="wcWordPadding" min="0" max="1" step="1">
+									<label id="wordPaddingLabel">1</label>
+								</div>
+								<div class="vega-bind">
+									<span class="vega-bind-name">&nbsp;Font Size Minimum (5-10)</span>
+									<input id="fontSizeRange0" type="range" name="fontSizeRange0" min="5" max="10" step="1">
+									<label id="wordcloudfsmin">8</label>
+								</div>
+								<div class="vega-bind">
+									<span class="vega-bind-name">&nbsp;Font Size Maximum (10-18)</span>
+									<input id="fontSizeRange1" type="range" name="fontSizeRange1" min="10" max="18" step="1">
+									<label id="wordcloudfsmax">14</label>
+								</div>
+							</div>								
+						</div>
+					</div>
+				</div>
+
+
+				<div id="topic_view_controls" class="Control_Panel" style="display: none;">
+					<div class="controls">
+						<h1 class="Control_Panel_Title"><span class="Control_Panel_Title_background">Topic controls</span></h1>
+						<button id="updateTCV" value="1" style="margin: auto;display: block;width: 200px;margin-bottom: 20px;">Update</button>
+						<label>&nbsp;Word cloud controls:</label>
+						<div class="row_in_Control_panels" style="margin-bottom: 10px; overflow: hidden">
+							<div id="topicWordCloudControls">
+								<!--<div class="vega-bind">
+									<span class="vega-bind-name">&nbsp;Word Padding (0-2)</span>
+									<input id="topicWordCloudWordPadding" type="range" name="topicWordCloudWordPadding" min="0" max="1" step="1">
+									<label id="topicWordCloudPaddingLabel">1</label>
+								</div>-->
+								<div class="vega-bind">
+									<span class="vega-bind-name">&nbsp;Font Size Minimum (5-10)</span>
+									<input id="topicFontSizeRangeMin" type="range" name="topicFontSizeRangeMin" min="5" max="10" step="1">
+									<label id="topicWordcloudfsmin">8</label>
+								</div>
+								<div class="vega-bind">
+									<span class="vega-bind-name">&nbsp;Font Size Maximum (10-18)</span>
+									<input id="topicFontSizeRangeMax" type="range" name="topicFontSizeRangeMax" min="10" max="18" step="1">
+									<label id="topicWordcloudfsmax">14</label>
+
+								</div>
+							</div>								
+						</div>
+					</div>
+				</div>
+
+				<div id="fe_view_controls" class="Control_Panel" style="display: none;">
+					<div class="controls">
+						<h1 class="Control_Panel_Title"><span class="Control_Panel_Title_background">Feature Explorer controls</span></h1>
+						<div id="Multi_dimension_Feature_explorer">
+							
+						  	<label>&nbsp;Samples Transformation:</label>
+
+							<div class="row_in_Control_panels" style="margin-bottom: 10px">
+								 <input type="radio" class="fe_radio" name="FeatureExplorerTransformationTypeRadios" title="show raw data without transformation" id="featureTransformation_None" value="normal" checked="">
+								 <label for="featureTransformation_None" title="show raw data without transformation">&nbsp;none</label>
+								 <input type="radio" class="fe_radio" name="FeatureExplorerTransformationTypeRadios" title="Normalize the data to range [0, 1]" id="featureTransformation_Normalized" value="normalized">
+								 <label for="featureTransformation_Normalized" title="Normalize the data to range [0, 1]">&nbsp;min-max</label>
+						  	</div>
+							<br>
+						  	<label>&nbsp;Feature Selection:</label>
+						  	<div class="displayAsTable">
+						  		<div class="tableBody">
+						  			<div class="tableRow">
+										<div class="tableCell">
+											<input type="checkbox" title="" class="fe_cbox" id="tweet_count" value="Count(tweets)" name="FeatureSelectionViolinCheckboxes" checked="">
+											<label for="tweet_count">Count(tweets)</label>
+										</div>
+										<div class="tableCell">
+											<input type="checkbox" title="" class="fe_cbox" id="tweetLength_count" value="Sum(tweet_length)" name="FeatureSelectionViolinCheckboxes">
+											<label for="tweetLength_count">SumTweetLength</label>
+										</div>
+										<div class="tableCell">
+											<input type="checkbox" title="" class="fe_cbox" id="tweetLength_avg" value="Avg(tweet_length)" name="FeatureSelectionViolinCheckboxes">
+											<label for="tweetLength_avg">AvgTweetLength</label>
+										</div>
+						  			</div>
+						  			<div class="tableRow">
+										<div class="tableCell">
+											<input type="checkbox" title="" class="fe_cbox" id="tweetLength_max" value="Max(tweet_length)" name="FeatureSelectionViolinCheckboxes">
+											<label for="tweetLength_max">MaxTweetLength</label>
+										</div>
+										<div class="tableCell">
+											<input type="checkbox" title="" class="fe_cbox" id="retweet_count" value="Sum(retweet_count)" name="FeatureSelectionViolinCheckboxes" checked="">
+											<label for="retweet_count">Sum(retweet)</label>
+										</div>
+										<div class="tableCell">
+											<input type="checkbox" title="" class="fe_cbox" id="favourites_count" value="Sum(favorite_count)" name="FeatureSelectionViolinCheckboxes" checked="">
+											<label for="favourites_count">Sum(Favourites)</label>
+									  	</div>
+						  			</div>
+						  			<div class="tableRow">
+						  				<div class="tableCell">
+						  					<input type="checkbox" title="" class="fe_cbox" id="retweeted_count" value="Sum(retweeted)" name="FeatureSelectionViolinCheckboxes">
+						  					<label for="retweeted_count">Sum(retweeted)</label>
+										</div>
+										<div class="tableCell">
+											<input type="checkbox" title="" class="fe_cbox" id="retweet_avg" value="Avg(retweet_count)" name="FeatureSelectionViolinCheckboxes">
+											<label for="retweet_avg">avg(retweet)</label>
+										</div>
+										<div class="tableCell">
+											<input type="checkbox" title="" class="fe_cbox" id="retweeted_avg" value="Avg(retweeted)" name="FeatureSelectionViolinCheckboxes">
+											<label for="retweeted_avg">avg(retweeted)</label>
+									  	</div>
+						  			</div>
+						  			<div class="tableRow">
+						  				<div class="tableCell">
+						  					<input type="checkbox" title="hashtags_count" class="fe_cbox" id="" value="Sum(num_hashtags)" name="FeatureSelectionViolinCheckboxes">
+						  					<label for="hashtags_count">Sum(hashtags)</label>
+						  				</div>
+						  				<div class="tableCell">
+						  					<input type="checkbox" title="" class="fe_cbox" id="urls_count" value="Sum(num_urls)" name="FeatureSelectionViolinCheckboxes">
+						  					<label for="urls_count">Sum(links)</label>
+						  				</div>
+						  				<div class="tableCell">
+						  					<input type="checkbox" title="" class="fe_cbox" id="mentions_count" value="Sum(num_mentions)" name="FeatureSelectionViolinCheckboxes">
+						  					<label for="mentions_count">Sum(mentions)</label>
+						  				</div>
+						  			</div>
+						  			<div class="tableRow">
+						  				<div class="tableCell">
+						  					<input type="checkbox" title="" class="fe_cbox" id="hashtags_avg" value="Avg(num_hashtags)" name="FeatureSelectionViolinCheckboxes">
+						  					<label for="hashtags_avg">avg(hashtags)</label>
+										</div>
+										<div class="tableCell">
+											<input type="checkbox" title="" class="fe_cbox" id="urls_avg" value="Avg(num_urls)" name="FeatureSelectionViolinCheckboxes">
+											<label for="urls_avg">avg(links)</label>
+										</div>
+										<div class="tableCell">
+											<input type="checkbox" title="" class="fe_cbox" id="mentions_avg" value="Avg(num_mentions)" name="FeatureSelectionViolinCheckboxes">
+											<label for="mentions_avg">avg(mentions)</label>
+										</div>
+						  			</div>
+						  			<div class="tableRow">
+						  				<div class="tableCell">
+						  					<input type="checkbox" title="" class="fe_cbox" id=">hashtags_max" value="Max(num_hashtags)" name="FeatureSelectionViolinCheckboxes">
+						  					<label for=">hashtags_max">max(hashtags)</label>
+										</div>
+										<div class="tableCell">
+											<input type="checkbox" title="urls_max" class="fe_cbox" id="" value="Max(num_urls)" name="FeatureSelectionViolinCheckboxes">
+											<label for="urls_max">max(links)</label>
+										</div>
+										<div class="tableCell">
+											<input type="checkbox" title="" class="fe_cbox" id="mentions_max" value="Max(num_mentions)" name="FeatureSelectionViolinCheckboxes">
+											<label for="mentions_max">max(mentions)</label>
+										</div>
+						  			</div>				  					  			
+						  		</div>
+							</div>
+							<div class="row_in_Control_panels" style="margin-bottom: 10px">
+								<button type="button" id="feature_explorer_button">Submit!</button>
+							 </div>
+						   	<br>  
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</body>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.0/moment.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.js"></script>
+	<script src='./scripts/libs/split-grid.js'></script>
+
+	<script src='./scripts/libs/d3.js'></script>
+	<script src='./scripts/libs/d3.queue.js'></script>
+	<script src='./scripts/flask.js'></script>
+	<script src='./scripts/globalHelper.js'></script>
+	<script src='./scripts/timeLineBox.js'></script>
+	<script src='./scripts/timeLineView.js'></script>
+	<script src='./scripts/scatterPlot.js'></script>
+	<script src='./scripts/wordCloud.js'></script>
+	<script src='./scripts/clusterView.js'></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.0/moment.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.js"></script>
+	<script src='./scripts/accounts.js'></script>
+	<script src='./scripts/index.js'></script>
+	<script src='./scripts/violin.js'></script>
+	
+	
+  
+</html>
